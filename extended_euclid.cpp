@@ -24,10 +24,10 @@ begin
   Result:= (xa, ya);
 end;
 
-II ex_eu(LL a,LL b){
-    LL x0=1,y0=0,x1=0,y1=1,xr,yr;
+ii ex_eu(ll a,ll b){
+    ll x0=1,y0=0,x1=0,y1=1,xr,yr;
     while(b){
-        LL q=a/b;
+        ll q=a/b;
         a-=q*b;
         swap(a,b);
         xr=x0-q*x1;
@@ -36,4 +36,27 @@ II ex_eu(LL a,LL b){
         x1=xr,y1=yr;
     }
     return {x0,y0};
+}
+
+
+int d, x, y;
+void extendedEuclid(int A, int B) {
+    if (B == 0) {
+        d = A;
+        x = 1;
+        y = 0;
+    }
+    else {
+        extendedEuclid(B, A%B);
+        int temp = x;
+        x = y;
+        y = temp - (A/B)*y;
+    }
+}
+
+int main() {
+    extendedEuclid(16, 10);
+    cout << "gcd(16, 10) = " << d << endl;
+    cout << "x, y: " << x <<  ", " << y << endl;
+    return 0;
 }
