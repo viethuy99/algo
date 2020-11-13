@@ -2,16 +2,16 @@
 
 using namespace std;
 
-const int maxn = 2e5 + 100;
+const int maxn = 2e3+100;
 
 int par[maxn][30], h[maxn], ufr[maxn];
 int n, m, cnt = 0;
-vector<int> e[maxn];
+vector <int> e[maxn];
 
 void dfs(int u, int p)
 {
     par[u][0] = p;
-    h[u] = h[p] + 1;
+    h[u] = h[p]+1;
     ufr[u] = cnt;
     for (auto v : e[u])
     {
@@ -19,7 +19,7 @@ void dfs(int u, int p)
             continue;
         dfs(v, u);
     }
-    return;
+    return ;
 }
 
 void rmq()
@@ -27,7 +27,7 @@ void rmq()
     for (int i = 1; i <= 22; i++)
     {
         for (int j = 1; j <= n; j++)
-            par[j][i] = par[par[j][i - 1]][i - 1];
+            par[j][i] = par[par[j][i-1]][i-1];
     }
 }
 
@@ -37,7 +37,7 @@ void init()
     {
         if (ufr[i] == 0)
         {
-            cnt++;
+            cnt ++;
             dfs(i, i);
         }
     }
@@ -47,7 +47,7 @@ void init()
 int getpar(int u, int hi)
 {
     for (int i = 22; i >= 0; i--)
-        if ((hi >> i) & 1)
+        if ((hi >> i)&1)
             u = par[u][i];
     return u;
 }
@@ -63,11 +63,11 @@ int lca(int u, int v)
     }
     for (int i = 22; i >= 0; i--)
     {
-        if (par[v][i] == par[u][i])
+        if (par[v][i] != par[u][i])
         {
             v = par[v][i];
             u = par[u][i];
         }
     }
-    return par[u][0];
+    return  par[u][0];
 }
