@@ -30,85 +30,104 @@ template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
 template<class T> int cntbit(T s) { return __builtin_popcount(s);}
-template<class T> inline T gcd(T a, T b){ T r; while (b != 0) { r = a % b; a = b; b = r; } return a;}
+template<class T> inline T gcd(T a, T b) { T r; while (b != 0) { r = a % b; a = b; b = r; } return a;}
 
-typedef double DB;
-typedef long long LL;
-typedef unsigned long long UL;
-typedef long double LD;
-typedef pair<LL,LL> II;
-typedef vector<LL> VI;
-typedef vector<II> VII;
-typedef vector<bool> VB;
+typedef long long ll;
 
-//tao node
 
-struct Node {
-    int key, priority;
-    Node *left = nullptr, *right = nullptr;
-    Node(int key) : key(key), priority(rand()) {}
+
+ll n, l, r, sum;
+
+struct node {
+    ll val, cnt = 1, prio;
+    node *lef = NULL, *rig = NULL;
+    // cnt la so con cua cay
+    node(ll val): val(val), prio(rand()) {};
 };
 
-// tim kiem
-#define left root->left
-#define right root->right
 
-Node *find(Node *root, int key) {
+node *find(node *root, int key) {
     if (!root) return nullptr;
-    if (key > root->key) return find(right, key);
-    if (key < root->key) return find(left, key);
+    if (key > root->val) return find(root->rig, key);
+    if (key < root->val) return find(root->lef, key);
     return root;
 }
 
-//timcay
-
-Node *rotate_right(Node *node) {
-    Node *x = node->left, *t = x->right;
-    x->right = node;
-    node->left = t;
-    return x;
+ll get(node *a) {
+    return a ? a->cnt : 0;
 }
 
-Node *rotate_left(Node *node) {
-    Node *x = node->right, *t = x->left;
-    x->left = node;
-    node->right = t;
-    return x;
+node* rotate_righ(node *root) {
+    node *a = root->lef, *b = a->rig;
+    a->rig = root;
+    root->lef = b;
+    ll tmp = root->cnt;
+    root->cnt = tmp - a->cnt + get(b);
+    a->cnt = tmp;
+    return a;
 }
 
-// chen
-Node *insert(Node *root, int key) {
-    if (!root) return new Node(key);
-    if (key < root->key) {
-        left = insert(left, key);
-        if (root->priority > left->priority)
-            root = rotate_right(root);
-    } else if (key > root->key) {
-        right = insert(right, key);
-        if (root->priority > right->priority)
-            root = rotate_left(root);
+node* rotate_left(node *root) {
+    node *a = root->rig, *b = a->lef;
+    a->lef = root;
+    root->rig = b;
+    ll tmp = root->cnt;
+    root->cnt = tmp - a->cnt + get(b);
+    a->cnt = tmp;
+    return a;
+}
+
+node* ins(node *root, ll val) {
+    if (!root) return new node(val);
+    root->cnt++;
+    if (val > root->val) {
+        root->rig = ins(root->rig, val);
+        if (root->prio < root->rig->prio) root = rotate_left(root);
+    }
+    else if (val < root->val) {
+        root->lef = ins(root->lef, val);
+        if (root->prio < root->lef->prio) root = rotate_righ(root);
     }
     return root;
 }
 
-
-
-
-int main(){
-    ios::sync_with_stdio(false);cin.tie(0);
-    #ifndef ONLINE_JUDGE
-    	freopen("input.txt","r",stdin);
-    	freopen("output.txt","w",stdout);
-    #endif
-    Node t;
-
-
-
-
-
-	return 0;
+ll get_less(node *a, ll val) {
+    if (!a) return 0;
+    if (val == a->val) return get(a->lef);
+    if (val < a->val) return get_less(a->lef, val);
+    return a->cnt - get(a->rig) + get_less(a->rig, val);
 }
 
 
+void Solve() {
+    srand(time(NULL));
+    cin >> n >> l >> r;
+    ll res = 0;
+    node *root = NULL;
+    root = ins(root, 0);
+    while (n--) {
+        ll x; cin >> x;
+        sum += x;
+        res += get_less(root, sum - l + 1) - get_less(root, sum - r);
+        root = ins(root, sum);
+    }
+    cout << res;
+}
+
+
+int main() {
+    ios::sync_with_stdio(0); cin.tie(0);
+
+//    freopen("1.inp","r",stdin);
+//    freopen("1.out","w",stdout);
+
+
+    int Test_numbers = 1;
+//    cin>>Test_numbers;
+
+    while (Test_numbers--) Solve();
+
+    return 0;
+}
 
 
