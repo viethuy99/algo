@@ -1,27 +1,27 @@
 class spare_table
 {
 
-private:
-    int table[maxn][30];
+long long table[maxn][20];
 public:
-    void build(int a[], int len, int ff(int, int))
+    void build(long long a[], long long len, long long ff(long long, long long))
     {
         memset(table, 0, sizeof(table));
-        for (int i = 1; i <= len; i++)
+        for (long long i = 1; i <= len; i++)
             table[i][0] = a[i];
-        for (int j = 1; (1<<j) <= len; j++)
+        for (long long j = 1; (1<<j) <= len; j++)
         {
-            for (int i = 1; i <= len; i++)
+            for (long long i = 1; i + (1<<j)-1 <= len; i++)
             {
                 table[i][j] = ff(table[i][j-1], table[i+(1<<(j-1))][j-1]);
             }
         }
     }
 
-    int get(int l, int r, int ff(int, int))
+    long long get(long long l, long long r, long long ff(long long, long long))
     {
-        int j = log2(r-l+1);
+        long long j = log2(r-l+1);
         return ff(table[l][j], table[r-(1<<j)+1][j]);
     }
 
 };
+
