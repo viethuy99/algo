@@ -41,6 +41,7 @@ void dfs(int u)
         } while (v!=u && !s.empty());
     }
 }
+
 int main()
 {
     //freopen("inp.txt", "r", stdin);
