@@ -30,7 +30,6 @@ void dfs(int v, int p = -1)
         }
     }
     if (p == -1 && children > 1)
-
         IS_CUTPOINT(v);
 }
 
